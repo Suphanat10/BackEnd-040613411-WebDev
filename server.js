@@ -21,3 +21,4 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+require("./app/routes/auth.routes")(app);
