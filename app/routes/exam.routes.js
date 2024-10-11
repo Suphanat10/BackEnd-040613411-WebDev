@@ -10,5 +10,22 @@ module.exports = function (app) {
     next();
   });
 
- 
+  app.get(
+    "/api/course/exam/getExam/question/:exam_id",
+    // [authJwt.verifyToken],
+    controller.get_exam_question_choice_by_exam
+  );
+
+  app.get(
+    "/api/course/getExam_student/:course_id",
+    // [authJwt.verifyToken],
+    controller.get_exam
+  );
+
+
+  
+
+
+
+
 };

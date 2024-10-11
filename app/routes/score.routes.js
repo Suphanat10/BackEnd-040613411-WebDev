@@ -9,6 +9,10 @@ module.exports = function (app) {
     );
     next();
   });
-
+  app.get(
+    "/api/course/score/getScore/:registration_id",
+    // [authJwt.verifyToken],
+    controller.get_score
+  );
   
 };

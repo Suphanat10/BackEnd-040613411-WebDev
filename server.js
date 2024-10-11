@@ -21,4 +21,12 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the server" });
+}
+);
+
 require("./app/routes/auth.routes")(app);
+require("./app/routes/exam.routes")(app);
+require("./app/routes/course.routes")(app);
+require("./app/routes/score.routes")(app);

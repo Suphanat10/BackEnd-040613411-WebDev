@@ -9,6 +9,18 @@ module.exports = function (app) {
     );
     next();
   });
+  app.get(
+    "/api/course/getCourseContent",
+    // [authJwt.verifyToken],
+    controller.get_lesson_chapter
+  );
 
+  app.get(
+    "/api/course/getMyCourse",
+    // [authJwt.verifyToken],
+    controller.get_mycourse
+  );
   
 };
+
+
