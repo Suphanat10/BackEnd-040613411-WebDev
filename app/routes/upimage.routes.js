@@ -19,7 +19,25 @@ module.exports = function (app) {
   });
 
 
- 
+  app.post("/api/img/upload/profile",
+  [authJwt.verifyToken],
+  upload_profile.single('file'),
+  controller.upload_profile);
+
+  app.post("/api/img/upload/slip",
+  [authJwt.verifyToken],
+  upload_slip.single('file'),  
+  controller.upload_slip);
+
+  app.post("/api/img/upload/course",
+  [authJwt.verifyToken],
+  upload_course.single('file'),
+  controller.upload_course);
+
+
+
+
+
 
   
 };
