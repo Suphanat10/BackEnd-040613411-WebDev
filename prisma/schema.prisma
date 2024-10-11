@@ -74,15 +74,14 @@ model course_lesson {
 }
 
 model course_reg {
-  registration_id             Int                           @id @default(autoincrement())
-  course_id                   Int?
-  user_id                     Int?
-  registration_status         Int?
-  completion_status           Int?
-  course                      course?                       @relation(fields: [course_id], references: [course_id], onDelete: Cascade, map: "course_reg_ibfk_1")
-  users_account               users_account?                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "course_reg_ibfk_2")
-  reg_exam_ans                reg_exam_ans[]
-  users_reg_transfer_document users_reg_transfer_document[]
+  registration_id     Int            @id @default(autoincrement())
+  course_id           Int?
+  user_id             Int?
+  registration_status Int?
+  completion_status   Int?
+  course              course?        @relation(fields: [course_id], references: [course_id], onDelete: Cascade, map: "course_reg_ibfk_1")
+  users_account       users_account? @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "course_reg_ibfk_2")
+  reg_exam_ans        reg_exam_ans[]
 
   @@index([course_id], map: "course_id")
   @@index([user_id], map: "user_id")
@@ -135,14 +134,4 @@ model users_account {
   google_id     String?      @db.VarChar(255)
   course        course[]
   course_reg    course_reg[]
-}
-
-model users_reg_transfer_document {
-  document_id       Int         @id @default(autoincrement())
-  transfer_document String?     @db.VarChar(255)
-  comment           String?     @db.VarChar(255)
-  registration_id   Int?
-  course_reg        course_reg? @relation(fields: [registration_id], references: [registration_id], onDelete: Cascade, map: "users_reg_transfer_document_ibfk_1")
-
-  @@index([registration_id], map: "users_reg_transfer_document_ibfk_1")
 }
