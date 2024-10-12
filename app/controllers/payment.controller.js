@@ -8,8 +8,8 @@ const { v4: uuidv4 } = require("uuid");
 exports.checkout = async (req, res) => {
    const course = req.body.course;
 
-
    try {
+
    const course_ = await prisma.course.findMany({
       where: {
          course_id: course.course_id,
@@ -20,13 +20,12 @@ exports.checkout = async (req, res) => {
    });
    
    if (course_ && course_.Continuity && course_.Continuity.length >= 2) {
-      // ถ้ามี 2 รายการใน Continuity ให้ลดราคา 20%
+   
       course.price = course.price - (course.price * 0.2);
    }else if (course_ && course_.Continuity && course_.Continuity.length >= 3) {
-      // ถ้ามี 3 รายการใน Continuity ให้ลดราคา 30%
       course.price = course.price - (course.price * 0.3);
    }else if (course_ && course_.Continuity && course_.Continuity.length >= 5) {
-      // ถ้ามี 4 รายการใน Continuity ให้ลดราคา 50%
+
       course.price = course.price - (course.price * 0.5);
    }
       const order_id = uuidv4();
@@ -48,6 +47,7 @@ exports.checkout = async (req, res) => {
          success_url: `http://localhost:3000/success?order_id=${order_id}`,
          cancel_url: `http://localhost:3000/cancel?order_id=${order_id}`,
       });
+      
       const data = {
          order_id: order_id,
          session_id: session.id,

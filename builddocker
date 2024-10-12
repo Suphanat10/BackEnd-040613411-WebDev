@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Source the registry configuration
+source ./registry.conf
+
+# Build the Docker image
+docker build -t ${REGISTRY_URL}/${IMAGE_NAME}:${VERSION} .
+
+# Push the Docker image to the registry
+docker push ${REGISTRY_URL}/${IMAGE_NAME}:${VERSION}
