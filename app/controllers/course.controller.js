@@ -449,13 +449,7 @@ exports.get_course_by_id = async (req, res) => {
                 last_name: true,
               },
             },
-            users_reg_transfer_document: {
-              select: {
-                transfer_document: true,
-                comment: true,
-                document_id: true,
-              },
-            },
+          
           },
         },
       },
@@ -464,53 +458,10 @@ exports.get_course_by_id = async (req, res) => {
     if (!course) {
       return res.status(404).send([]);
     }
+    
     res.status(200).send(course);
-    }else if(users.permission_id == 3){
-      if (!course_id) {
-        return res.status(400).send({
-          message: "Course ID is required!",
-          code: 400,
-        });
-      }
-  
-      const course = await prisma.course.findFirst({
-        where: {
-          course_id: course_id,
+    
       
-        },
-        include: {
-          course_lesson: {
-            select: {
-              lesson_name: true,
-              lesson_id: true,
-            },
-          },
-          course_reg: {
-            include: {
-              users_account: {
-                select: {
-                  prefix: true,
-                  first_name: true,
-                  last_name: true,
-                },
-              },
-              users_reg_transfer_document: {
-                select: {
-                  transfer_document: true,
-                  comment: true,
-                  document_id: true,
-                },
-              },
-            },
-          },
-        },
-      });
-  
-      if (!course) {
-        return res.status(404).send([]);
-      }
-      res.status(200).send(course);
-
 
     }else{
       return res.status(400).send({
@@ -616,8 +567,10 @@ exports.regis_course = async (req, res) => {
           course_id: course_id,
           user_id: user_id,
           registration_status: 1,
+          order_id: null,
+          session_id : null,
           completion_status: 0,
-        },
+        }
       });
       return res.status(200).send({
         message: "Course was registered successfully!",
@@ -680,12 +633,6 @@ exports.get_mycourse = async (req, res) => {
               registration_status: true,
               completion_status: true,
               registration_id: true,
-              users_reg_transfer_document: {
-                select: {
-                  transfer_document: true,
-                  comment: true,
-                },
-              },
             },
             where: {
               user_id: user_id,
