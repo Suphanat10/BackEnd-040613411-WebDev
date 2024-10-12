@@ -180,7 +180,6 @@ exports.login = async (req, res) => {
     }
 
     var passwordIsValid = bcrypt.compareSync(password, user.password);
-
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
@@ -197,9 +196,9 @@ exports.login = async (req, res) => {
       .status(200)
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        httpOnly: false,
-        sameSite: "none",
         secure: false,
+        httpOnly: true,
+        sameSite: "none"
       })
       .send({
         id: user.user_id,
@@ -211,7 +210,7 @@ exports.login = async (req, res) => {
       });
       const currentDate = new Date();
       const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
-    const saveLogs = await prisma.logs.create({
+      const saveLogs = await prisma.logs.create({
       data: {
         log_description: "เข้าสู่ระบบ",
         user_id: user.user_id,
@@ -313,7 +312,7 @@ exports.register = async (req, res) => {
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
         httpOnly: false,
-        sameSite: "none",
+        sameSite: "lax",
         secure: false,
       })
       .send({

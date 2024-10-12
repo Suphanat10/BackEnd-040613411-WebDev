@@ -9,23 +9,32 @@ exports.checkout = async (req, res) => {
    const course = req.body.course;
 
    try {
+      if(!course) {
+         return res.status(400).send({
+            message: "course is required",
+            code: 400,
+         });
+      }
 
-   const course_ = await prisma.course.findMany({
-      where: {
-         course_id: course.course_id,
-      },
-      include: {
-         Continuity: true, 
-      },
-   });
+      
+
+
+   // const course_ = await prisma.course.findMany({
+   //    where: {
+   //       course_id: course.course_id,
+   //    },
+   //    include: {
+   //       Continuity: true, 
+   //    },
+   // });
    
-   if (course_ && course_.Continuity && course_.Continuity.length >= 2) {
-      course.price = course.price - (course.price * 0.2);
-   }else if (course_ && course_.Continuity && course_.Continuity.length >= 3) {
-      course.price = course.price - (course.price * 0.3);
-   }else if (course_ && course_.Continuity && course_.Continuity.length >= 5) {
-      course.price = course.price - (course.price * 0.5);
-   }
+   // if (course_ && course_.Continuity && course_.Continuity.length >= 2) {
+   //    course.price = course.price - (course.price * 0.2);
+   // }else if (course_ && course_.Continuity && course_.Continuity.length >= 3) {
+   //    course.price = course.price - (course.price * 0.3);
+   // }else if (course_ && course_.Continuity && course_.Continuity.length >= 5) {
+   //    course.price = course.price - (course.price * 0.5);
+   // }
       const order_id = uuidv4();
 
       const session = await stripe.checkout.sessions.create({
@@ -55,7 +64,6 @@ exports.checkout = async (req, res) => {
             session_id: session.id,
             order_id: order_id,
             registration_status : 1,
-
          },
            
       })
