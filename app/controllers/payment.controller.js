@@ -20,15 +20,14 @@ exports.checkout = async (req, res) => {
    });
    
    if (course_ && course_.Continuity && course_.Continuity.length >= 2) {
-   
       course.price = course.price - (course.price * 0.2);
    }else if (course_ && course_.Continuity && course_.Continuity.length >= 3) {
       course.price = course.price - (course.price * 0.3);
    }else if (course_ && course_.Continuity && course_.Continuity.length >= 5) {
-
       course.price = course.price - (course.price * 0.5);
    }
       const order_id = uuidv4();
+
       const session = await stripe.checkout.sessions.create({
          payment_method_types: ["QR"],
          line_items: [
@@ -47,25 +46,25 @@ exports.checkout = async (req, res) => {
          success_url: `http://localhost:3000/success?order_id=${order_id}`,
          cancel_url: `http://localhost:3000/cancel?order_id=${order_id}`,
       });
-      
-      const data = {
-         order_id: order_id,
-         session_id: session.id,
-         course_id: course.course_id,
-         user_id: req.user_id,
-         status: "pending",
-         information: information,
-      };
-      const create_order = await prisma.order.create({
-         data: data,
-      });
+
+      const update_data = await prisma.course_reg.update({
+         where: {
+           user_id: req.user_id,
+         },
+         data: {
+            session_id: session.id,
+            order_id: order_id,
+            registration_status : 1,
+
+         },
+           
+      })
       res.status(200).send({
          status: true,
          message: "success",
          session_id: session.id,
+         order_id: order_id,
       });
-
-
 
    } catch (err) {
        res.status(500).send({
@@ -110,4 +109,32 @@ exports.webhook = async (req, res) => {
    }
 }
 
+
+
+exports.recheck_status =  async (req, res) => {
+   const orderId = req.params.id;
+   try {
+       const order = await prisma.course_reg.findFirst({
+             where: {
+                order_id: orderId,
+             },
+
+          });
+         if (!order) {
+            return res.status(404).send([]);
+         }
+
+       res.status(200).send(order);
+   }
+   catch (err) {
+      res.status(500).send({
+         message: err.message,
+         code: 500,
+      });
+   }
+}
+
+
+      
+         
 
