@@ -539,6 +539,8 @@ exports.regis_course = async (req, res) => {
       });
     }
 
+  
+
     const check_users_account = await prisma.users_account.findFirst({
       where: {
         user_id: user_id,
@@ -553,8 +555,8 @@ exports.regis_course = async (req, res) => {
     }
 
     if (
-      check_users_account.permission_id == 2 ||
-      check_users_account.permission_id == 3
+      check_users_account.permission_id == 2
+
     ) {
       return res.status(403).send({
         message: "You are not allowed to register this course!",

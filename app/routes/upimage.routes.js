@@ -3,7 +3,6 @@ const { authJwt } = require("../middleware");
 const express = require('express')
 const multer  = require('multer')
 const upload_profile = require("../multer_controller/multer_profile");
-const upload_slip = require("../multer_controller/multer_slip");
 const upload_course = require("../multer_controller/multer_course");
 
 
@@ -24,10 +23,7 @@ module.exports = function (app) {
   upload_profile.single('file'),
   controller.upload_profile);
 
-  app.post("/api/img/upload/slip",
-  [authJwt.verifyToken],
-  upload_slip.single('file'),  
-  controller.upload_slip);
+
 
   app.post("/api/img/upload/course",
   [authJwt.verifyToken],

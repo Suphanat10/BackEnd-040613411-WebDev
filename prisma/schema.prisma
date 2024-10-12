@@ -16,6 +16,7 @@ model course {
   image              String?         @db.VarChar(255)
   cost               Float?
   img_account        String?         @db.VarChar(255)
+  Continuity         Int?
   users_account      users_account?  @relation(fields: [instructor], references: [user_id], onDelete: Cascade, map: "course_ibfk_1")
   course_exam        course_exam[]
   course_lesson      course_lesson[]
@@ -79,6 +80,7 @@ model course_reg {
   user_id             Int?
   registration_status Int?
   completion_status   Int?
+  Order_Id            String?        @db.VarChar(255)
   course              course?        @relation(fields: [course_id], references: [course_id], onDelete: Cascade, map: "course_reg_ibfk_1")
   users_account       users_account? @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "course_reg_ibfk_2")
   reg_exam_ans        reg_exam_ans[]

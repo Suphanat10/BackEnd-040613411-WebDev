@@ -13,6 +13,15 @@ module.exports = function (app) {
   });
 
   
+  app.post(
+    "/api/payment/checkout",
+    [authJwt.verifyToken],
+    controller.checkout
+  );
+
+
+
+  
 
 
   
