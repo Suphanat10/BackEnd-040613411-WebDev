@@ -8,7 +8,7 @@ exports.create = async (req, res) => {
       req.body;
     const instructor = req.user_id;
     const image = req.body.image;
-    const image_account = req.body.image_account;
+    
 
     if (!course_name || !course_description || !instructor) {
       return res.status(400).send({
@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
         instructor: instructor,
         image: image,
         cost: cost,
-        img_account: image_account,
+        
       },
     });
 
@@ -165,6 +165,8 @@ exports.get_course = async (req, res) => {
         },
       },
     });
+
+
     if (!course) {
       return res.status(404).send([]);
     }
@@ -544,15 +546,14 @@ exports.regis_course = async (req, res) => {
     }
 
     if (checkcourse.course_visibility == false) {
-      const order_id = uuidv4();
+      const order_id_ = uuidv4();
 
       const createCoursefree = await prisma.course_reg.create({
         data: {
           course_id: course_id,
           user_id: user_id,
           registration_status: 2,
-          completion_status: 0,
-          order_id: order_id,
+          order_id: order_id_,
           session_id : null,
         },
       });
@@ -569,7 +570,6 @@ exports.regis_course = async (req, res) => {
           registration_status: 1,
           order_id: null,
           session_id : null,
-          completion_status: 0,
         }
       });
       return res.status(200).send({
@@ -596,14 +596,14 @@ exports.get_mycourse = async (req, res) => {
       },
     });
 
+  
+
     if (users.permission_id == 1) {
       const course = await prisma.course.findMany({
-
         where: {
           course_reg: {
-    
             some: {
-              user_id: user_id,
+              user_id: user_id, 
             },
           },
         },
@@ -613,7 +613,6 @@ exports.get_mycourse = async (req, res) => {
           course_description: true,
           course_visibility: true,
           image: true,
-          img_account: true,
           cost: true,
           course_lesson: {
             select: {
@@ -631,16 +630,15 @@ exports.get_mycourse = async (req, res) => {
           course_reg: {
             select: {
               registration_status: true,
-              completion_status: true,
               registration_id: true,
             },
             where: {
-              user_id: user_id,
+              user_id: user_id, 
             },
           },
         },
       });
-
+  
       if (!course) {
         return res.status(200).send([]);
       }

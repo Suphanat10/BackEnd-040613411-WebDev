@@ -16,7 +16,6 @@ exports.checkout = async (req, res) => {
          });
       }
 
-      
 
 
    // const course_ = await prisma.course.findMany({

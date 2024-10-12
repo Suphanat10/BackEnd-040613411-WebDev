@@ -133,7 +133,7 @@ exports.login_by_google = async (req, res) => {
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
         httpOnly: false,
-        sameSite: "none",
+        sameSite: "lax",
         secure: false,
       })
       .send({
@@ -198,7 +198,7 @@ exports.login = async (req, res) => {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
         secure: false,
         httpOnly: true,
-        sameSite: "none"
+        sameSite: "lax"
       })
       .send({
         id: user.user_id,
@@ -288,7 +288,6 @@ exports.register = async (req, res) => {
         code: 403,
       });
     }
-
 
     const createUser = await prisma.users_account.create({
       data: {
