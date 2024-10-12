@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const { v4: uuidv4 } = require("uuid");
 
 exports.create = async (req, res) => {
   try {
@@ -592,12 +593,16 @@ exports.regis_course = async (req, res) => {
     }
 
     if (checkcourse.course_visibility == false) {
+      const order_id = uuidv4();
+
       const createCoursefree = await prisma.course_reg.create({
         data: {
           course_id: course_id,
           user_id: user_id,
           registration_status: 2,
           completion_status: 0,
+          order_id: order_id,
+          session_id : null,
         },
       });
       return res.status(200).send({

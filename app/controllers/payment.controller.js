@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 
 exports.checkout = async (req, res) => {
    const course = req.body.course;
-   const  information = req.body.information;
+
 
    try {
    const course_ = await prisma.course.findMany({
@@ -45,8 +45,8 @@ exports.checkout = async (req, res) => {
             },
          ],
          mode: "payment",
-         success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-         cancel_url: `${process.env.CLIENT_URL}/cancel`,
+         success_url: `http://localhost:3000/success?order_id=${order_id}`,
+         cancel_url: `http://localhost:3000/cancel?order_id=${order_id}`,
       });
       const data = {
          order_id: order_id,
@@ -75,6 +75,39 @@ exports.checkout = async (req, res) => {
     }
    }
 
+exports.webhook = async (req, res) => {
+   const sig = req.headers["stripe-signature"];
+   let event;
 
+   try {
+      event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+   }catch (err) {
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+   }
+
+   switch (event.type) {
+      case "checkout.session.completed":
+         const session = event.data.object;
+         const order_id = session.client_reference_id;
+         const order = await prisma.order.findUnique({
+            where: {
+               order_id: order_id,
+            },
+         });
+         if (order) {
+            await prisma.order.update({
+               where: {
+                  order_id: order_id,
+               },
+               data: {
+                  status: "success",
+               },
+            });
+         }
+         break;
+      default:
+         return res.status(400).end();
+   }
+}
 
 
