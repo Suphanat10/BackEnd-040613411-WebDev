@@ -20,10 +20,6 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-
-
-
-
 const whitelist = [ 
   '172.16.255.250:4200', 
 ]

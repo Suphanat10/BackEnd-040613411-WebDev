@@ -1,6 +1,6 @@
 const controller = require("../controllers/payment.controller");
 const { authJwt } = require("../middleware");
-
+const bodyParser = require("body-parser");
 
 
 module.exports = function (app) {
@@ -13,10 +13,27 @@ module.exports = function (app) {
   });
 
   
+
+
+
   app.post(
-    "/api/payment/checkout",
+    "/api/course/payment/createPayment",
     [authJwt.verifyToken],
-    controller.checkout
+    controller.create
+  );
+
+  app.post(
+    "/api/course/payment/check_price",
+    [authJwt.verifyToken],
+    controller.check_price
+  );
+
+
+  app.post(
+    "/api/course/payment/webhook",
+    bodyParser.raw({ type: "application/json" }),
+    // [authJwt.verifyToken],
+    controller.webhook
   );
 
 
