@@ -5,7 +5,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const nodemailer = require("nodemailer");
 
-
 exports.delete_google = async (req, res) => {
   try {
     const user_id = req.user_id;
@@ -22,13 +21,15 @@ exports.delete_google = async (req, res) => {
       code: 200,
     });
     const currentDate = new Date();
-    const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
     const saveLogs = await prisma.logs.create({
       data: {
         log_description: "ยกเลิกการเชื่อต่อ Google Account",
         user_id: user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
@@ -72,7 +73,6 @@ exports.register_by_google = async (req, res) => {
       });
     }
 
-  
     const updateUser = await prisma.users_account.update({
       where: {
         user_id: user_id,
@@ -81,28 +81,28 @@ exports.register_by_google = async (req, res) => {
         google_id: google_id,
         email: email,
       },
-
     });
     res.status(200).send({
       message: "Google Account was registered successfully!",
       code: 200,
     });
-    
+
     const currentDate = new Date();
-    const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
     const saveLogs = await prisma.logs.create({
       data: {
         log_description: "การเชื่อต่อ Google Account",
         user_id: user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
     res.status(403).send({
       message: "Some error occurred while register the Google Account.",
       code: 403,
-      
     });
   }
 };
@@ -135,6 +135,8 @@ exports.login_by_google = async (req, res) => {
         httpOnly: false,
         sameSite: "none",
         secure: true,
+        // sameSite: "lax",
+        // secure: false,
       })
       .send({
         id: user.user_id,
@@ -144,14 +146,16 @@ exports.login_by_google = async (req, res) => {
         permission: user.permission_id,
         accessToken: token,
       });
-      const currentDate = new Date();
-      const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
+    const currentDate = new Date();
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
     const saveLogs = await prisma.logs.create({
       data: {
         log_description: "เข้าสู่ระบบโดยใช้ Google Account",
         user_id: user.user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
@@ -208,19 +212,21 @@ exports.login = async (req, res) => {
         permission: user.permission_id,
         accessToken: token,
       });
-      const currentDate = new Date();
-      const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
-      const saveLogs = await prisma.logs.create({
+    const currentDate = new Date();
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
+    const saveLogs = await prisma.logs.create({
       data: {
         log_description: "เข้าสู่ระบบ",
         user_id: user.user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
     res.status(500).send({
-      message:  "Some error occurred while login the User.",
+      message: "Some error occurred while login the User.",
       code: 500,
     });
   }
@@ -279,7 +285,6 @@ exports.register = async (req, res) => {
       where: {
         email: email,
       },
-
     });
 
     if (checkEmail) {
@@ -317,20 +322,26 @@ exports.register = async (req, res) => {
       .send({
         message: "User was registered successfully!",
         id: createUser.user_id,
-        name:createUser.prefix  + createUser.first_name + " " +createUser.last_name,
+        name:
+          createUser.prefix +
+          createUser.first_name +
+          " " +
+          createUser.last_name,
         email: createUser.email,
         gender: createUser.gender,
         permission: createUser.permission_id,
         accessToken: token,
       });
-      const currentDate = new Date();
-      const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
+    const currentDate = new Date();
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
     const saveLogs = await prisma.logs.create({
       data: {
         log_description: "ลงทะเบียนผู้ใช้งานใหม่",
         user_id: createUser.user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
@@ -347,15 +358,14 @@ exports.Forgot_password = async (req, res) => {
     const email = req.body.email;
 
     let transporter = nodemailer.createTransport({
-      host: 'mail.wutthiphon.space',
+      host: "mail.wutthiphon.space",
       port: 587,
       secure: false,
       auth: {
-          user: 'project@wutthiphon.space',
-          pass: '6504062620116'
-        
+        user: "project@wutthiphon.space",
+        pass: "6504062620116",
       },
-  });
+    });
 
     const user = await prisma.users_account.findFirst({
       where: {
@@ -385,12 +395,12 @@ exports.Forgot_password = async (req, res) => {
       },
     });
 
-    
-    transporter.sendMail({
-      from: "project@wutthiphon.space" ,
-      to: user.email,
-      subject: 'Reset Password',
-      html: `
+    transporter.sendMail(
+      {
+        from: "project@wutthiphon.space",
+        to: user.email,
+        subject: "Reset Password",
+        html: `
       <!doctype html>
       <html lang="en">
       
@@ -754,28 +764,30 @@ exports.Forgot_password = async (req, res) => {
         </table>
       </body>
       </html>
-      `,      
-      
-    }, (err, info) => {
-      if (err) {
+      `,
+      },
+      (err, info) => {
+        if (err) {
           console.log(err);
-      } else {
-           res.status(200).send({
+        } else {
+          res.status(200).send({
             message: "Send email successfully!",
             code: 200,
           });
+        }
       }
-  });
+    );
 
-
-  const currentDate = new Date();
-  const sevenHoursAheadDate = new Date(currentDate.getTime() + (7 * 60 * 60 * 1000));
+    const currentDate = new Date();
+    const sevenHoursAheadDate = new Date(
+      currentDate.getTime() + 7 * 60 * 60 * 1000
+    );
     const saveLogs = await prisma.logs.create({
       data: {
         log_description: "ลืมรหัสผ่าน",
         user_id: user.user_id,
         ip_address: req.ip,
-        timestamp: sevenHoursAheadDate 
+        timestamp: sevenHoursAheadDate,
       },
     });
   } catch (err) {
