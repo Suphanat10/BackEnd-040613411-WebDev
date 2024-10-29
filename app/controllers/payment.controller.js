@@ -72,6 +72,8 @@ exports.check_price = async (req, res) => {
         code: 400,
       });
     }
+
+    //เเก้เอาเฉพาะคอร์สเรียนที่เสียเงิน ตรวจสอบใหม่ ไม่นับคอร์สเรียนฟรี
     const course_ = await prisma.course_reg.findMany({
       where: {
         user_id: course.user_id,
