@@ -6,7 +6,8 @@ exports.get_score = async (req, res) => {
   try {
     const registration_id = parseInt(req.params.registration_id);
 //ค้นหาข้อมูล lesson  โดยค้นหาจาก registration_id ที่ได้รับ และรวมข้อมูลของ course, course_lesson, course_exam, course_exam_problem, course_exam_choices, และ reg_exam_ans ด้วย include.
-    const find_lesson = await prisma.course_reg.findFirst({
+    
+const find_lesson = await prisma.course_reg.findFirst({
       where: {
         registration_id: registration_id,
       },

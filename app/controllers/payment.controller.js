@@ -64,6 +64,7 @@ exports.create = async (req, res) => {
 };
 
 exports.check_price = async (req, res) => {
+  const user_id = req.user_id;
   const course = req.body.course;
   try {
     if (!course) {
@@ -72,16 +73,21 @@ exports.check_price = async (req, res) => {
         code: 400,
       });
     }
-
+    
     //เเก้เอาเฉพาะคอร์สเรียนที่เสียเงิน ตรวจสอบใหม่ ไม่นับคอร์สเรียนฟรี
+    
     const course_ = await prisma.course_reg.findMany({
       where: {
-        user_id: course.user_id,
+        user_id: user_id,
+        course: {
+          course_visibility: true,
+        }
       },
       include: {
         course: true,
-      },
-    });
+      }
+    })
+    
     let prommotion_status = false;
     if (course_ && course_.length >= 3) {
       course.cost = course.cost - course.cost * 0.3;
