@@ -132,7 +132,7 @@ exports.login_by_google = async (req, res) => {
       .status(200)
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "none",
         secure: true,
         // sameSite: "lax",
@@ -200,7 +200,7 @@ exports.login = async (req, res) => {
       .status(200)
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "none",
         secure: true,
       })
@@ -315,7 +315,7 @@ exports.register = async (req, res) => {
       .status(200)
       .cookie("accessToken", token, {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 1),
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "none",
         secure: true,
       })
